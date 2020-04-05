@@ -15,19 +15,34 @@ Node * Node_Construct(int val);
 int determinek(int size, int k, int prevk);
 Node * LLKsort(Node *head, int k, int size);
 void LLswap(Node * a, Node * b);
+void printList( Node *start); 
+
 
 int main()
 {
     int size  = 0;
     Node * head = NULL;
     head = readfile(&size);
-    printf("size is %d\n",size);
+    printList(head) ;
+
+    //printf("size is %d\n",size);
     int prevk;
-    int k = determinek(14, 1, prevk);
-    printf("\nk is now %d",k);
-    head = LLKsort(head, k, size);
+    int k = determinek(41, 1, prevk);
+    //head = LLKsort(head, k, size);
+    printList(head);
     return 0;
 }
+
+void printList( Node *start) 
+{ 
+	Node *temp = start; 
+	printf("\n"); 
+	while (temp!=NULL) 
+	{ 
+		printf("%d ", temp->value); 
+		temp = temp->next; 
+	} 
+} 
 
 void swap(Node *a, Node *b) 
 { 
@@ -38,35 +53,63 @@ void swap(Node *a, Node *b)
 
 Node * LLKsort(Node *head, int k, int size)
 {
-    int ksneeded = size / k;
-    printf("/n k's needed is: %d",ksneeded);
+    int ksneeded = k / size;
+    printf("\n k's needed is: %d",ksneeded);
     
+    Node * p1 = NULL;
+    p1 = malloc(sizeof(Node));
+    Node * p2 = NULL;
+    p2 = malloc(sizeof(Node));
     
-    
-    
-    for (int i = 0; i < ksneeded; i++)
+    p1 = head;
+    p2 = head;
+
+    for (int i = 0; i < ksneeded; i++) //k sort
     {
+        printf(".");
+        for (int j = 0; j < k; j++)
+        {
+            printf(",");
+            if (p2->next != NULL)
+                p2 = p2->next;
+            else
+                printf("\np2 bonk");
+        }
         
+        printf("\n%d:%d",p1->value,p2->value);
+        if ((p1->value) < (p2->value))
+        {
+            printf("!");
+            swap(p1, p2);
+        }
+        p1 = p2;
     }
+    return head;
 }
 
 
 
 int determinek(int size, int k, int prevk)
 {
+    int tpk = k;
+    int i = 0;
     while (k<size)
     {
         prevk = k;
         k = 3*k+1;
-        k = determinek(size,k,prevk);  
+        k = determinek(size,k,prevk);     
     }
-    printf("PK:%d",prevk);
+    if (tpk != k)
+    {
+        printf("\nK:%d, PK:%d, tpk:%d, i:%d",k,prevk,tpk,i);
+        return k;
+    }
     return k;
 }
 Node * readfile(int * size) //read file and store list from file
 {
     FILE * fptr;
-    fptr = fopen("10.txt", "r");
+    fptr = fopen("10simp.txt", "r");
     int readint = 0;
     fscanf(fptr,"%d",&readint);
     
@@ -87,8 +130,10 @@ Node * readfile(int * size) //read file and store list from file
         fscanf(fptr, "%d",&readint);
         *size = *size+1;
     }
-    HEAD = List_Insert(HEAD,readint);
+    
     fclose(fptr);
+    
+    return HEAD;
 }
 
 
