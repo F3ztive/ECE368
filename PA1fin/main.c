@@ -12,7 +12,7 @@ typedef struct listnode {
 Node * readfile(int * size);
 Node * List_Insert(Node * head, int val);
 Node * Node_Construct(int val);
-int determinek(int size, int k, int prevk);
+int determinek(int size, int k, int prevk, Node ** head);
 Node * LLKsort(Node *head, int k, int size);
 void LLswap(Node * a, Node * b);
 void printList( Node *start); 
@@ -23,12 +23,13 @@ int main()
     int size  = 0;
     Node * head = NULL;
     head = readfile(&size);
-    printList(head) ;
+    //printList(head) ;
 
     //printf("size is %d\n",size);
     int prevk;
-    int k = determinek(size, 1, prevk);
+    int k = determinek(size, 1, prevk, &head);
     //head = LLKsort(head, k, size);
+    printf("\n||||||||||");
     printList(head);
     return 0;
 }
@@ -53,55 +54,66 @@ void swap(Node *a, Node *b)
 
 Node * LLKsort(Node *head, int k, int size)
 {
-    int ksneeded = k / size;
-    printf("\n k's needed is: %d",ksneeded);
+    printf("\nk:%d=",k);
+    printList(head);
+
+    int ksneeded = size / k;
+    //printf("\n k's needed is: %d",ksneeded);
     
     Node * p1 = NULL;
     p1 = malloc(sizeof(Node));
     Node * p2 = NULL;
     p2 = malloc(sizeof(Node));
     
+
+    
+    for (int x = 0; x < size;   )
+    {
     p1 = head;
     p2 = head;
+        x = x + k;
+        for (int i = 0; i < ksneeded; i++) //repeat for the necessary number for k
+        {
+            //printf(".");
+            for (int j = 0; j < k; j++)
+            {
+                //printf(",");
+                if (p2->next != NULL)
+                    p2 = p2->next;
+                /*else
+                    printf("\np2 bonk");*/
+            }
 
-    for (int i = 0; i < ksneeded; i++) //k sort
-    {
-        printf(".");
-        for (int j = 0; j < k; j++)
-        {
-            printf(",");
-            if (p2->next != NULL)
-                p2 = p2->next;
-            else
-                printf("\np2 bonk");
+            printf("\n%d:%d",p1->value,p2->value);
+            if ((p1->value) > (p2->value))
+            {
+                printf("!");
+                swap(p1, p2);
+            }
+            p1 = p2;
         }
-        
-        printf("\n%d:%d",p1->value,p2->value);
-        if ((p1->value) < (p2->value))
-        {
-            printf("!");
-            swap(p1, p2);
-        }
-        p1 = p2;
     }
+     printList(head);
+     
     return head;
 }
 
 
 
-int determinek(int size, int k, int prevk)
+int determinek(int size, int k, int prevk, Node ** head)
 {
     int tpk = k;
     while (k<size)
     {
-        
-        k = 3*k+1;
         prevk = k;
-        k = determinek(size,k,prevk);     
+        k = 3*k+1;
+        
+        k = determinek(size,k,prevk,&head);     
     }
     if (tpk != k)
     {
-        printf("\nK:%d, PK:%d, tpk:%d, i:%d",k,prevk,tpk);
+        //printf("\nK:%d, PK:%d, tpk:%d",k,prevk,tpk);
+        head = LLKsort(head, prevk, size);
         return k;
     }
     return k;
