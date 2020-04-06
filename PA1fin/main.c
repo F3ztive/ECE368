@@ -27,7 +27,7 @@ int main()
 
     //printf("size is %d\n",size);
     int prevk;
-    int k = determinek(41, 1, prevk);
+    int k = determinek(size, 1, prevk);
     //head = LLKsort(head, k, size);
     printList(head);
     return 0;
@@ -39,8 +39,8 @@ void printList( Node *start)
 	printf("\n"); 
 	while (temp!=NULL) 
 	{ 
-		printf("%d ", temp->value); 
-		temp = temp->next; 
+            printf("%d ", temp->value); 
+            temp = temp->next; 
 	} 
 } 
 
@@ -92,16 +92,16 @@ Node * LLKsort(Node *head, int k, int size)
 int determinek(int size, int k, int prevk)
 {
     int tpk = k;
-    int i = 0;
     while (k<size)
     {
-        prevk = k;
+        
         k = 3*k+1;
+        prevk = k;
         k = determinek(size,k,prevk);     
     }
     if (tpk != k)
     {
-        printf("\nK:%d, PK:%d, tpk:%d, i:%d",k,prevk,tpk,i);
+        printf("\nK:%d, PK:%d, tpk:%d, i:%d",k,prevk,tpk);
         return k;
     }
     return k;
