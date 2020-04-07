@@ -6,58 +6,68 @@
 //void Array_Shellsort(long *array, int size, long *n comp);
 typedef struct listnode {
     struct listnode * next;
-    int value;
+    long value;
 } Node;
 
-Node * readfile(int * size);
-Node * List_Insert(Node * head, int val);
-Node * Node_Construct(int val);
-int determinek(int size, int k, int prevk, Node ** head);
-Node * LLKsort(Node *head, int k, int size);
+Node * List_Load_From_File(char  * filename);
+Node * List_Insert(Node * head, long val);
+Node * Node_Construct(long val);
+Node * LLKsort(Node *head, long k, long size);
 void LLswap(Node * a, Node * b);
 void printList( Node *start); 
+int List_Save_To_File(char *filename, Node *list);
+int determinesize(Node * head);
 
+
+Node * ksender(long size, Node * head)
+{
+    //size = 2147483646;
+    long k = 1743392200;
+    while (k > size)
+    {
+        k = (k - 1)/ 3;
+        printf("\n%ld",k);
+    }
+    while (k >0)
+    {
+        LLKsort(head, k, size);
+        k = (k - 1)/ 3;
+    }
+}
 
 int main()
 {
-    int size  = 0;
+    long size  = 0;
     Node * head = NULL;
-    head = readfile(&size);
+    head = List_Load_From_File("15.b");
+    size = determinesize(head);
+    printf("size is %ld",size);
     //printList(head) ;
 
     //printf("size is %d\n",size);
     int prevk;
-    int k = determinek(size, 1, prevk, &head);
+    ksender(size, head);
+    //int k = determinek(k, prevk, &head);
     //head = LLKsort(head, k, size);
-    printf("\n||||||||||");
-    printList(head);
+    printf("\n||||||||||\n");
+    //printList(head);
+    //size = List_Save_To_File("outputfile.txt", head);
+    //printf("\nsize is %d",size);
     return 0;
 }
 
-void printList( Node *start) 
+
+
+Node * LLKsort(Node * head, long k, long size)
 { 
-	Node *temp = start; 
-	printf("\n"); 
-	while (temp!=NULL) 
-	{ 
-            printf("%d ", temp->value); 
-            temp = temp->next; 
-	} 
-} 
-
-void swap(Node *a, Node *b) 
-{ 
-    int temp = a->value; 
-    a->value = b->value; 
-    b->value = temp; 
-}
-
-Node * LLKsort(Node *head, int k, int size)
-{
-    printf("\nk:%d=",k);
-    printList(head);
-
-    int ksneeded = size / k;
+    //printf("\nk:%ld=",k);
+    //printList(head);
+    int ksneeded;
+    if (k != 0)
+    {
+       ksneeded = size / k;
+    }
+    
     //printf("\n k's needed is: %d",ksneeded);
     
     Node * p1 = NULL;
@@ -65,9 +75,40 @@ Node * LLKsort(Node *head, int k, int size)
     Node * p2 = NULL;
     p2 = malloc(sizeof(Node));
     
+    for (int q = k; q < size; q = q + k)
+    {
+        for (int i = 0; i < k;i++)
+        {
+            p1 = head;
+            //p2 = head;
 
-    
-    for (int x = 0; x < size;   )
+            for (int p = i;p<k;p++)
+            {
+                p1 = p1->next;
+            }
+            p2 = p1;
+            for (int j = 0; j < ksneeded;j++)
+            {
+                for (int m = 0; m < k; m++)
+                {
+                    if ((p2->next) == NULL)
+                        p2 == NULL;
+                    else
+                        p2 = p2->next;
+                }
+
+                //printf("\n%d:%d",p1->value,p2->value);
+
+                if ((p1->value) > (p2->value))
+                {
+                    //printf("!");
+                    swap(p1, p2);
+                }
+                p1 = p2;
+            }
+        }
+    }
+    /*for (int x = 0; x < size;   )
     {
     p1 = head;
     p2 = head;
@@ -80,11 +121,11 @@ Node * LLKsort(Node *head, int k, int size)
                 //printf(",");
                 if (p2->next != NULL)
                     p2 = p2->next;
-                /*else
-                    printf("\np2 bonk");*/
+                //else
+                    //printf("\np2 bonk");
             }
 
-            printf("\n%d:%d",p1->value,p2->value);
+            printf("\n%ld:%ld",p1->value,p2->value);
             if ((p1->value) > (p2->value))
             {
                 printf("!");
@@ -93,22 +134,35 @@ Node * LLKsort(Node *head, int k, int size)
             p1 = p2;
         }
     }
+    
      printList(head);
-     
+    */
     return head;
 }
 
-
-
-int determinek(int size, int k, int prevk, Node ** head)
+/*int determinek(int k, int prevk, Node ** head)
 {
+    
+    int size = 0;
+    Node * temp = NULL;
+    temp = malloc(sizeof(Node));
+    temp->next = NULL;
+    temp->value = 0;
+    
+    temp = head;
+    while (temp != NULL)
+    {
+        temp = temp->next;
+        size++;
+    }
+    
     int tpk = k;
     while (k<size)
     {
         prevk = k;
         k = 3*k+1;
         
-        k = determinek(size,k,prevk,&head);     
+        k = determinek(k,prevk,&head);     
     }
     if (tpk != k)
     {
@@ -118,12 +172,15 @@ int determinek(int size, int k, int prevk, Node ** head)
     }
     return k;
 }
-Node * readfile(int * size) //read file and store list from file
+*/
+
+Node * List_Load_From_File(char * filename) //read file and store list from file
 {
+    long buffer;
     FILE * fptr;
-    fptr = fopen("10simp.txt", "r");
+    fptr = fopen("15.b", "rb");
     int readint = 0;
-    fscanf(fptr,"%d",&readint);
+    fread(&buffer,sizeof(buffer),1,fptr);    
     
     Node * HEAD = NULL;
     HEAD = malloc(sizeof(Node));
@@ -136,11 +193,28 @@ Node * readfile(int * size) //read file and store list from file
         return HEAD;
     } 
     
-    while (!feof(fptr))
+    
+    //get file size
+    fseek (fptr , 0 , SEEK_END);
+    int size = ftell(fptr);
+    rewind (fptr);
+    size = size/sizeof(long);
+    //printf("size is %d",size);
+    
+    /*
+    buffer = (char*) malloc (sizeof(char)*size);
+    if (buffer == NULL) 
     {
-        HEAD = List_Insert(HEAD,readint);
-        fscanf(fptr, "%d",&readint);
-        *size = *size+1;
+        printf("mem error");
+    }*/
+    
+
+    
+    for (int i = 0; i < size; i++)
+    {
+        //printf("%ld",buffer);
+        HEAD = List_Insert(HEAD,buffer);
+        fread(&buffer,sizeof(buffer),1,fptr);       
     }
     
     fclose(fptr);
@@ -148,8 +222,7 @@ Node * readfile(int * size) //read file and store list from file
     return HEAD;
 }
 
-
-Node * Node_Construct(int val)
+Node * Node_Construct(long val)
 {
     Node * nd = malloc(sizeof(Node));
     nd -> value = val;
@@ -157,10 +230,66 @@ Node * Node_Construct(int val)
     return nd;
 }
 
-Node * List_Insert(Node * head, int val)
+Node * List_Insert(Node * head, long val)
 {
-    printf("insert %d\n",val);
+    //printf("insert %ld\n",val);
     Node * ptr = Node_Construct(val);
     ptr -> next = head;
     return ptr;
+}
+
+int determinesize(Node * head)
+{
+    Node * temp = NULL;
+    temp = malloc(sizeof(Node));
+    temp->next = NULL;
+    temp->value = 0;
+    temp = head;
+    
+    int size = -1;
+    
+    while (temp != NULL)
+    {
+        temp = temp->next;
+        size++;
+    }
+    return size;
+}
+
+int List_Save_To_File(char *filename, Node *list)
+{
+    FILE * fptr;
+    fptr = fopen(filename, "w");
+    int size = 0;
+    char writechar;
+    
+    Node *temp = list; 
+    while (temp!=NULL) 
+    { 
+       
+       temp = temp->next;
+       writechar = (char)((temp->value)+'0');
+       //fputc(writechar,fptr); 
+       size++;
+    }     
+    fclose(fptr);
+    return (size-1); //since the loop increments one time too many
+}
+
+void printList( Node *start) 
+{ 
+	Node *temp = start; 
+	printf("\n"); 
+	while (temp!=NULL) 
+	{ 
+            printf("%ld ", temp->value); 
+            temp = temp->next; 
+	} 
+} 
+
+void swap(Node *a, Node *b) 
+{ 
+    long temp = a->value; 
+    a->value = b->value; 
+    b->value = temp; 
 }
