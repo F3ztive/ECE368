@@ -12,28 +12,13 @@ typedef struct listnode {
 Node * List_Load_From_File(char  * filename);
 Node * List_Insert(Node * head, long val);
 Node * Node_Construct(long val);
-Node * LLKsort(Node *head, long k, long size);
+Node * List_Shellsort(Node *head, long k, long size);
 void LLswap(Node * a, Node * b);
 void printList( Node *start); 
 int List_Save_To_File(char *filename, Node *list);
 int determinesize(Node * head);
+Node * ksender(long size, Node * head);
 
-
-Node * ksender(long size, Node * head)
-{
-    //size = 2147483646;
-    long k = 1743392200;
-    while (k > size)
-    {
-        k = (k - 1)/ 3;
-        printf("\n%ld",k);
-    }
-    while (k >0)
-    {
-        LLKsort(head, k, size);
-        k = (k - 1)/ 3;
-    }
-}
 
 int main()
 {
@@ -50,15 +35,32 @@ int main()
     //int k = determinek(k, prevk, &head);
     //head = LLKsort(head, k, size);
     printf("\n||||||||||\n");
+    
+    
     //printList(head);
-    //size = List_Save_To_File("outputfile.txt", head);
+    size = List_Save_To_File("outputfile.txt", head);
     //printf("\nsize is %d",size);
     return 0;
 }
 
+Node * ksender(long size, Node * head)
+{
+    //size = 2147483646;
+    long k = 1743392200;
+    while (k > size)
+    {
+        k = (k - 1)/ 3;
+        //printf("\n%ld",k);
+    }
+    while (k >0)
+    {
+        head = List_Shellsort(head, k, size);
+        k = (k - 1)/ 3;
+    }
+}
 
 
-Node * LLKsort(Node * head, long k, long size)
+Node * List_Shellsort(Node * head, long k, long size)
 { 
     //printf("\nk:%ld=",k);
     //printList(head);
@@ -102,7 +104,7 @@ Node * LLKsort(Node * head, long k, long size)
                 if ((p1->value) > (p2->value))
                 {
                     //printf("!");
-                    swap(p1, p2);
+                    LLswap(p1, p2);
                 }
                 p1 = p2;
             }
@@ -258,36 +260,39 @@ int determinesize(Node * head)
 
 int List_Save_To_File(char *filename, Node *list)
 {
-    FILE * fptr;
-    fptr = fopen(filename, "w");
+    FILE *fd = fopen(filename, "w");
     int size = 0;
-    char writechar;
     
-    Node *temp = list; 
+    Node * temp = NULL;
+    temp = malloc(sizeof(Node));
+    temp->next = NULL;
+    temp->value = 0;
+    temp = list; 
+    
     while (temp!=NULL) 
     { 
-       
+       printf(".");
+       fprintf(fd, "%li\n", temp->value);
        temp = temp->next;
-       writechar = (char)((temp->value)+'0');
        //fputc(writechar,fptr); 
        size++;
     }     
-    fclose(fptr);
+    fclose(fd);
     return (size-1); //since the loop increments one time too many
 }
 
 void printList( Node *start) 
 { 
 	Node *temp = start; 
-	printf("\n"); 
+	//printf("\n"); 
 	while (temp!=NULL) 
 	{ 
-            printf("%ld ", temp->value); 
+            //printf("%ld ", temp->value); 
             temp = temp->next; 
 	} 
 } 
 
-void swap(Node *a, Node *b) 
+void LLswap(Node *a, Node *b) 
 { 
     long temp = a->value; 
     a->value = b->value; 
