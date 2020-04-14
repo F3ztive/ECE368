@@ -4,60 +4,98 @@
 //#include "sorting.c"
 void Quick_Sort(long * Array, int Size);
 long comparefunc(const void * ptr1, const void * ptr2);
-void printarr(int * intArray, int size);
+void printarr(long * intArray, int size);
 int compareint(const void * a, const void * b) ;
 void intqs(int * Array, int Size);
+void QUICKHELP(long * Array, int LB, int UB);
+void swap(long * Array, int pos1, int pos2);
+int getpivot(long * Array, int LB, int UB);
+   
+
+
+
+
 
 int main(int argc, char** argv) {
-    long Array[5] = {3,1,4,1,5};
-    int intArray[5] = {3,1,4,1,5};
     
-    int Size = sizeof(Array) / sizeof(Array[0]);
-    int intsize = sizeof(intArray) / sizeof(intArray[0]);
-    //printarr(Array,Size);
-
-    printarr(intArray,intsize);
-
-    intqs(intArray, intsize);
+    long Array[5] = {30,11,41,10,50};
+    
+    int Size = sizeof(Array) / sizeof(long);
+    //Load_Into_Array(Filename, Size);
+    //Save_From_Array(Filename, Array, Size)
+    printarr(Array,Size);
+    Quick_Sort(Array, Size);
     printf("\n");
-    printarr(intArray,Size);
-
+    printarr(Array,Size);
+    
     return (EXIT_SUCCESS);
 }
 
-int compareint (const void * a, const void * b) {
-   return ( *(int*)a - *(int*)b );
+void swap(long * Array, int pos1, int pos2)
+{
+    printf("\n%ld:%ld",Array[pos1],Array[pos2]);
+    if (Array[pos1] == Array[pos2])
+        return;
+    else
+    {
+        printf("x");
+        long temp = Array[pos1];
+        Array[pos1] = Array[pos2];
+        Array[pos2] = temp;
+    }
+}
+
+int getpivot(long * Array, int LB, int UB)
+{
+    int x = LB + (rand() % (UB - LB + 1)); //maybe add " % Size " to rand?
+    swap(Array, LB, x);
+    
+    int pos = LB++;
+    for (int i = ++LB; i<=UB; i++ )
+    {
+        if (Array[i] < Array[LB])
+        {
+            swap(Array,i,pos++);
+        }
+    }    
 }
 
 long comparefunc(const void * ptr1, const void * ptr2)
 {
-    
-    return 6;
+    return ( *(long*)ptr1 - *(long*)ptr2 );
 }
 
-void intqs(int * intArray, int Size)
+
+
+void QUICKHELP(long * Array, int LB, int UB)
 {
-    qsort(intArray, Size, sizeof(int),compareint);
-
+    if (LB >= UB)
+        return;
+    int pivot = getpivot(Array, LB, UB);
+    QUICKHELP(Array, LB, --pivot);
+    QUICKHELP(Array, ++pivot, UB);
 }
-
 void Quick_Sort(long * Array, int Size)
 {
-    qsort(Array, Size, sizeof(Array[0]),comparefunc);
+    Size--;
+    QUICKHELP(Array, 0, Size);
 }
 
-void printarr(int * intArray, int size)
+void printarr(long * intArray, int size)
 {
     int i = 0;
     while (i<size)
     {
-        printf("%d",intArray[i]);
+        printf("%ld",intArray[i]);
         i++;
     }
 }
 
 void Merge_Sort(long * Array, int Size)
 {
-    
+    if (Size > 2)
+    {
+        
+    }
 }
 
