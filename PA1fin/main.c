@@ -65,12 +65,12 @@ long main()
     
     int prevk;
     ksender(size, head);
-    int k = determinek(k, prevk, &head);
-    head = LLKsort(head, k, size);
+    //int k = determinek(k, prevk, &head);
+    //head = LLKsort(head, k, size);
     printf("\n||||||||||\n");
     
-    List_Shellsort(head, k, size);
-    //printList(head);
+    //List_Shellsort(head, k, size);
+    printList(head);
     //size = List_Save_To_File(argv[3], head);
     //printf("\nsize is %d",size);
     //long 0;
@@ -175,7 +175,7 @@ void Array_Shellsort(long *array, int size, long *n_comp)
 }
 
 
-Node * ksender(long size, Node * head)
+Node * ksender(long size, Node * head) //does the sorting lol
 {
     //size = 2147483646;
     long k = 1743392200;
