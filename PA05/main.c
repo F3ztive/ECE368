@@ -123,7 +123,7 @@ void MERGEHELP(long * Array, int LB, int UB)
 
     int mid = (UB + LB) / 2;
     MERGEHELP(Array, LB, mid);
-    MERGEHELP(Array, ++mid, UB);
+    MERGEHELP(Array, mid + 1, UB);
     merge(Array, LB, mid, UB);
 }
 
